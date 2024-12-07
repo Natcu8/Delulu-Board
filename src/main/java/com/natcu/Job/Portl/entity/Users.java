@@ -29,8 +29,8 @@ public class Users {
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date registration_date;
 
-    @ManyToOne(cascade =  CascadeType.ALL)
-    @JoinColumn(name="userTypeId", referencedColumnName = "userTypeId")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
     private UsersType userTypeId;
 
     public Users() {
@@ -61,11 +61,11 @@ public class Users {
         this.email = email;
     }
 
-    public @NotEmpty String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(@NotEmpty String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 

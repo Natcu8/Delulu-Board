@@ -1,12 +1,9 @@
-// Jenkinsfile for CI/CD pipeline using Maven JDK 21 and host Docker
-
 pipeline {
     agent any
 
     environment {
-        // Replace with your ECR repository URI
+        // ECR repository URI
         ECR_REGISTRY = "885657313466.dkr.ecr.ap-south-1.amazonaws.com/rhoboardcontainerrepo"
-        DOCKER_IMAGE_NAME = ""
         VERSION = "1.0.${BUILD_NUMBER}"
 
         // Use workspace for Maven local repo
@@ -24,7 +21,6 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Spring Boot application with Maven JDK 21...'
-                // Run Maven inside Docker with JDK 21, using workspace Maven repo
                 sh """
                 docker run --rm \
                     -v $WORKSPACE:/workspace \
@@ -37,7 +33,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker image using host Docker...'
+                echo 'Building Docker image...'
                 script {
                     def image = "${env.ECR_REGISTRY}:${env.VERSION}"
                     sh "docker build -t ${image} ."
@@ -49,16 +45,30 @@ pipeline {
             steps {
                 echo 'Pushing Docker image to ECR...'
                 script {
-                    // Ensure Docker image name is lowercase
                     def image = "${env.ECR_REGISTRY}:${env.VERSION}"
-
                     sh """
-                        # Login to ECR
                         aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${env.ECR_REGISTRY}
-                        
-                        # Push the Docker image
                         docker push ${image}
                     """
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo 'Deploying to Kubernetes cluster...'
+                script {
+                    withKubeConfig([credentialsId: 'eks-kubeconfig']) {
+                        // Apply deployment.yaml and service.yaml
+                        sh 'kubectl apply -f k8s/deployment.yaml'
+                        sh 'kubectl apply -f k8s/service.yaml'
+
+                        // Update image in deployment to the newly built version
+                        sh "kubectl set image deployment/rhoboard-deployment rhoboard-container=${ECR_REGISTRY}:${VERSION} --record"
+
+                        // Wait for rollout to complete
+                        sh 'kubectl rollout status deployment/rhoboard-deployment'
+                    }
                 }
             }
         }

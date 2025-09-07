@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: Rhoboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: Rhoboard
+  template:
+    metadata:
+      labels:
+        app: Rhoboard
+    spec:
+      containers:
+        - name: Rhoboard
+          image: 885657313466.dkr.ecr.ap-south-1.amazonaws.com/rhoboardcontainerrepo:${BUILD_NUMBER}
+          ports:
+            - containerPort: 8080

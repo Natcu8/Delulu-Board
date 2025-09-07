@@ -20,6 +20,9 @@ pipeline {
 
         // This creates a unique version number for each build
         VERSION = "1.0.${BUILD_NUMBER}"
+		
+		//Maven Cache Path
+		MAVEN_OPTS = "-Dmaven.repo.local=$WORKSPACE/.m2" // Tell Maven to use this local repo
     }
 
     stages {
@@ -35,7 +38,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the Spring Boot application with Maven...'
-                sh 'mvn clean package'
+                sh "mvn clean package -Dmaven.repo.local=$WORKSPACE/.m2"
             }
         }
 

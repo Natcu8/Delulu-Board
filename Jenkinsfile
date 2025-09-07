@@ -6,7 +6,7 @@ pipeline {
     environment {
         // Replace with your ECR repository URI
         ECR_REGISTRY = "885657313466.dkr.ecr.ap-south-1.amazonaws.com/rhoboardcontainerrepo"
-        DOCKER_IMAGE_NAME = "rhoboard"
+        DOCKER_IMAGE_NAME = ""
         VERSION = "1.0.${BUILD_NUMBER}"
 
         // Use workspace for Maven local repo

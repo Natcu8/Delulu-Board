@@ -59,21 +59,19 @@ pipeline {
                 echo 'Deploying to Kubernetes...'
                 script {
                     sh """
-                set -euxo pipefail
+                    set -exu
 
-                # Generate kubeconfig dynamically
-                aws eks update-kubeconfig --name first-cluster --region ap-south-1 --kubeconfig /tmp/kubeconfig
+                    ws eks update-kubeconfig --name first-cluster --region ap-south-1 --kubeconfig /tmp/kubeconfig
+                    export KUBECONFIG=/tmp/kubeconfig
+                    echo "Using kubeconfig: \$KUBECONFIG"
+                    kubectl version --client
+                    kubectl cluster-info
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f k8s/service.yaml
+                    kubectl set image deployment/rhoboard-deployment rhoboard-container=${ECR_REGISTRY}:${VERSION} --record
+                    kubectl rollout status deployment/rhoboard-deployment
+                    """
 
-                export KUBECONFIG=/tmp/kubeconfig
-
-                echo "Using kubeconfig: \$KUBECONFIG"
-                kubectl version --client
-                kubectl cluster-info
-                kubectl apply -f k8s/deployment.yaml
-                kubectl apply -f k8s/service.yaml
-                kubectl set image deployment/rhoboard-deployment rhoboard-container=${ECR_REGISTRY}:${VERSION} --record
-                kubectl rollout status deployment/rhoboard-deployment
-            """
                 }
             }
         }

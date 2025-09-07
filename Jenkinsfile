@@ -5,7 +5,7 @@ pipeline {
     // We use a Docker agent with a Maven image to ensure the correct build tools are available.
     agent {
         docker {
-            image 'maven:3.9.3-eclipse-temurin-21'
+            image 'maven:3.9.11-eclipse-temurin-17-noble'
             args '-v /root/.m2:/root/.m2' // Caching Maven dependencies
         }
     }

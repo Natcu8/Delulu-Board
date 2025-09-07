@@ -39,7 +39,7 @@ pipeline {
             steps {
                 echo 'Building Docker image using host Docker...'
                 script {
-                    def image = "${env.ECR_REGISTRY}/${env.DOCKER_IMAGE_NAME}:${env.VERSION}"
+                    def image = "${env.ECR_REGISTRY}:${env.VERSION}"
                     sh "docker build -t ${image} ."
                 }
             }

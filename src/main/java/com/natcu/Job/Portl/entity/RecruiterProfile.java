@@ -1,6 +1,5 @@
 package com.natcu.Job.Portl.entity;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -36,7 +35,9 @@ public class RecruiterProfile {
         this.profilePhoto = profilePhoto;
     }
 
+    // This is the corrected constructor. It properly assigns the Users object.
     public RecruiterProfile(Users users) {
+        this.user_Id = users;
     }
 
     public int getUserAccountId() {
@@ -125,15 +126,4 @@ public class RecruiterProfile {
                 ", profilePhoto='" + profilePhoto + '\'' +
                 '}';
     }
-
-
 }
-
-
-
-
-
-
-
-
-

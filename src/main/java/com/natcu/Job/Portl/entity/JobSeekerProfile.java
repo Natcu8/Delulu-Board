@@ -43,7 +43,9 @@ public class JobSeekerProfile {
         this.skills = skills;
     }
 
+    // This is the corrected constructor. It properly assigns the Users object.
     public JobSeekerProfile(Users users) {
+        this.userid = users;
     }
 
     public int getUserAccountId() {

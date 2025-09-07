@@ -1,4 +1,4 @@
-// Jenkinsfile for CI/CD pipeline using Maven JDK 21 and host Docker 2
+// Jenkinsfile for CI/CD pipeline using Maven JDK 21 and host Docker
 
 pipeline {
     agent any
@@ -49,10 +49,15 @@ pipeline {
             steps {
                 echo 'Pushing Docker image to ECR...'
                 script {
-                    def image = "${env.ECR_REGISTRY}/${env.DOCKER_IMAGE_NAME}:${env.VERSION}"
+                    // Ensure Docker image name is lowercase
+                    def image = "${env.ECR_REGISTRY}/${env.DOCKER_IMAGE_NAME.toLowerCase()}:${env.VERSION}"
+
                     sh """
-                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${env.ECR_REGISTRY}
-                    docker push ${image}
+                        # Login to ECR
+                        aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${env.ECR_REGISTRY}
+                        
+                        # Push the Docker image
+                        docker push ${image}
                     """
                 }
             }

@@ -56,7 +56,7 @@ pipeline {
 
         stage('Deploy to EKS-Kubernetes') {
     steps {
-        withCredentials([file(credentialsId: 'eks-kubeconfig', variable: 'KUBECONFIG')]) {
+        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
             sh """
                 set -x
                 echo Deploying to Kubernetes cluster...

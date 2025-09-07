@@ -61,7 +61,7 @@ pipeline {
                     sh """
                     set -exu
 
-                    ws eks update-kubeconfig --name first-cluster --region ap-south-1 --kubeconfig /tmp/kubeconfig
+                    aws eks update-kubeconfig --name first-cluster --region ap-south-1 --kubeconfig /tmp/kubeconfig
                     export KUBECONFIG=/tmp/kubeconfig
                     echo "Using kubeconfig: \$KUBECONFIG"
                     kubectl version --client
@@ -70,7 +70,8 @@ pipeline {
                     kubectl apply -f k8s/service.yaml
                     kubectl set image deployment/rhoboard-deployment rhoboard-container=${ECR_REGISTRY}:${VERSION} --record
                     kubectl rollout status deployment/rhoboard-deployment
-                    """
+                """
+
 
                 }
             }

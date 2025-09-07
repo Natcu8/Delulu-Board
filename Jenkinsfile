@@ -58,7 +58,7 @@ pipeline {
             steps {
                 echo 'Deploying to Kubernetes...'
                 script {
-                     sh """
+                    sh """
                 set -euxo pipefail
 
                 # Generate kubeconfig dynamically
@@ -66,7 +66,7 @@ pipeline {
 
                 export KUBECONFIG=/tmp/kubeconfig
 
-                echo "Using kubeconfig: $KUBECONFIG"
+                echo "Using kubeconfig: \$KUBECONFIG"
                 kubectl version --client
                 kubectl cluster-info
                 kubectl apply -f k8s/deployment.yaml

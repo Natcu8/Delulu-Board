@@ -50,7 +50,7 @@ pipeline {
                 echo 'Pushing Docker image to ECR...'
                 script {
                     // Ensure Docker image name is lowercase
-                    def image = "${env.ECR_REGISTRY}/${env.DOCKER_IMAGE_NAME}:${env.VERSION}"
+                    def image = "${env.ECR_REGISTRY}:${env.VERSION}"
 
                     sh """
                         # Login to ECR

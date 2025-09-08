@@ -57,29 +57,32 @@ pipeline {
                 echo 'Deploying to Kubernetes...'
                 script {
                     def image = "${env.ECR_REGISTRY}:${env.VERSION}"
-                    sh """
-                    set -exu
-
-                    echo "Updating kubeconfig..."
-                    aws eks update-kubeconfig --name second-cluster --region ap-south-1
-                    export KUBECONFIG=/var/lib/jenkins/.kube/config
-                    echo "Using kubeconfig: \$KUBECONFIG"
-
-                    echo "Cluster Info:"
-                    kubectl version --client
-                    kubectl cluster-info
-                    kubectl cluster-info dump
-
-                    echo "Applying Kubernetes manifests..."
-                    kubectl apply -f deployment.yaml 
-                    kubectl apply -f service.yaml
-
-                    echo "Updating deployment image to: ${image}"
-                    kubectl set image deployment/rhoboard-deployment rhoboard-container=${image} --record
-
-                    echo "Waiting for rollout to finish..."
-                    kubectl rollout status deployment/rhoboard-deployment
-                """
+					sh """
+					set -eux
+            
+					# Set kubeconfig path FIRST
+					export KUBECONFIG=/var/lib/jenkins/.kube/config
+					mkdir -p /var/lib/jenkins/.kube
+            
+					echo "Caller identity:"
+					aws sts get-caller-identity
+            
+					echo "Update kubeconfig..."
+					aws eks update-kubeconfig --region ap-south-1 --name second-cluster --kubeconfig "\$KUBECONFIG"
+            
+					echo "Test cluster access..."
+					kubectl get ns
+            
+					echo "Apply manifests..."
+					kubectl apply -f deployment.yaml
+					kubectl apply -f service.yaml
+            
+					echo "Update deployment image to: ${image}"
+					kubectl set image deployment/rhoboard-deployment rhoboard-container=${image} --record
+            
+					echo "Wait for rollout..."
+					kubectl rollout status deployment/rhoboard-deployment
+					"""
                 }
             }
         }

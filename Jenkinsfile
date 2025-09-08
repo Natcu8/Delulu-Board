@@ -62,7 +62,7 @@ pipeline {
 
                     echo "Updating kubeconfig..."
                     aws eks update-kubeconfig --name second-cluster --region ap-south-1
-                    export KUBECONFIG=/tmp/kubeconfig
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
                     echo "Using kubeconfig: \$KUBECONFIG"
 
                     echo "Cluster Info:"

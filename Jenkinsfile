@@ -2,11 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // ECR repository URI
+
         ECR_REGISTRY = "885657313466.dkr.ecr.ap-south-1.amazonaws.com/rhoboardcontainerrepo"
         VERSION = "1.0.${BUILD_NUMBER}"
-
-        // Use workspace for Maven local repo
         MAVEN_OPTS = "-Dmaven.repo.local=$WORKSPACE/.m2/repository"
     }
 

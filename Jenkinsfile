@@ -52,36 +52,36 @@ pipeline {
             }
         }
 
-                stage('Deploy to Kubernetes') {
-                    steps {
-                        echo 'Deploying to Kubernetes...'
-                        script {
-                            def image = "${env.ECR_REGISTRY}:${env.VERSION}"
-                            sh """
-                            set -exu
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo 'Deploying to Kubernetes...'
+                script {
+                    def image = "${env.ECR_REGISTRY}:${env.VERSION}"
+                    sh """
+                    set -exu
 
-                            echo "Updating kubeconfig..."
-                            aws eks update-kubeconfig --name first-cluster --region ap-south-1 --kubeconfig /tmp/kubeconfig
-                            export KUBECONFIG=/tmp/kubeconfig
-                            echo "Using kubeconfig: \$KUBECONFIG"
+                    echo "Updating kubeconfig..."
+                    aws eks update-kubeconfig --name second-cluster --region ap-south-1 --kubeconfig /tmp/kubeconfig
+                    export KUBECONFIG=/tmp/kubeconfig
+                    echo "Using kubeconfig: \$KUBECONFIG"
 
-                            echo "Cluster Info:"
-                            kubectl version --client
-                            kubectl cluster-info
+                    echo "Cluster Info:"
+                    kubectl version --client
+                    kubectl cluster-info
 
-                            echo "Applying Kubernetes manifests..."
-                            kubectl apply -f deployment.yaml 
-                            kubectl apply -f service.yaml
+                    echo "Applying Kubernetes manifests..."
+                    kubectl apply -f deployment.yaml 
+                    kubectl apply -f service.yaml
 
-                            echo "Updating deployment image to: ${image}"
-                            kubectl set image deployment/rhoboard-deployment rhoboard-container=${image} --record
+                    echo "Updating deployment image to: ${image}"
+                    kubectl set image deployment/rhoboard-deployment rhoboard-container=${image} --record
 
-                            echo "Waiting for rollout to finish..."
-                            kubectl rollout status deployment/rhoboard-deployment
-                        """
-                        }
-                    }
+                    echo "Waiting for rollout to finish..."
+                    kubectl rollout status deployment/rhoboard-deployment
+                """
                 }
+            }
+        }
 
     }
 

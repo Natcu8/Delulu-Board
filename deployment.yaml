@@ -1,19 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: Rhoboard
+  name: rhoboard-deployment
+  labels:
+    app: rhoboard
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: Rhoboard
+      app: rhoboard
   template:
     metadata:
       labels:
-        app: Rhoboard
+        app: rhoboard
     spec:
       containers:
-        - name: Rhoboard
-          image: 885657313466.dkr.ecr.ap-south-1.amazonaws.com/rhoboardcontainerrepo:${BUILD_NUMBER}
+        - name: rhoboard-container
+          # Placeholder image; Jenkins will overwrite with kubectl set image
+          image: 885657313466.dkr.ecr.ap-south-1.amazonaws.com/rhoboardcontainerrepo:placeholder
           ports:
             - containerPort: 8080

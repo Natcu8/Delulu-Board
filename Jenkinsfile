@@ -72,8 +72,8 @@ pipeline {
                             kubectl cluster-info
 
                             echo "Applying Kubernetes manifests..."
-                            kubectl apply -f k8s/deployment.yaml
-                            kubectl apply -f k8s/service.yaml
+                            kubectl apply -f deployment.yaml || {echo "deployment.yaml was not found at root"; exit 1;}
+                            kubectl apply -f service.yaml
 
                             echo "Updating deployment image to: ${image}"
                             kubectl set image deployment/rhoboard-deployment rhoboard-container=${image} --record

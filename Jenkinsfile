@@ -68,6 +68,7 @@ pipeline {
                     echo "Cluster Info:"
                     kubectl version --client
                     kubectl cluster-info
+                    kubectl cluster-info dump
 
                     echo "Applying Kubernetes manifests..."
                     kubectl apply -f deployment.yaml 

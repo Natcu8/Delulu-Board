@@ -61,7 +61,7 @@ pipeline {
                     set -exu
 
                     echo "Updating kubeconfig..."
-                    aws eks update-kubeconfig --name second-cluster --region ap-south-1 --kubeconfig /tmp/kubeconfig
+                    aws eks update-kubeconfig --name second-cluster --region ap-south-1
                     export KUBECONFIG=/tmp/kubeconfig
                     echo "Using kubeconfig: \$KUBECONFIG"
 

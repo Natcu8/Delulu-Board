@@ -70,7 +70,7 @@ pipeline {
                             kubectl cluster-info
 
                             echo "Applying Kubernetes manifests..."
-                            kubectl apply -f deployment.yaml || {echo "deployment.yaml was not found at root"; exit 1;}
+                            kubectl apply -f deployment.yaml 
                             kubectl apply -f service.yaml
 
                             echo "Updating deployment image to: ${image}"
